@@ -25,23 +25,45 @@ public class BlackJack {
         int losses = 0;
         int ties = 0;
 
-        
+        String playAgain;
 
-        initializeDeck(); // this initializes the deck - Rito M
-        shuffleDeck(); // this initializes the shuffle - Trinity H
+        do {
+        // Reset deck for each round
+        currentCardIndex = 0;
+        initializeDeck();/* Rito Murillo. This initializes the deck */
+        shuffleDeck(); /* Trinity Hurtado. This intialzies the shuffle */
 
-        int playerTotal = dealInitialPlayerCards(); // This assigns the playerTotal to the dealInitialPlayerCards() - Rito M.
-        int dealerTotal = dealInitialDealerCards(); // This assigns the dealerTotal to the dealInitialDealerCards() - Trinity H
+        int playerTotal = dealInitialPlayerCards(); /* Rito Murillo. This assigns the player total to the inital player cards */
+        int dealerTotal = dealInitialDealerCards(); /* Trinity Hurtado. This assigns the dealer total to the dealer intital cards */
 
         playerTotal = playerTurn(scanner, playerTotal);
         if (playerTotal > 21) {
-            System.out.println("You busted! Dealer wins."); // If the players total goes past 21 this line prints out that he lost - Rito M.
-            return;
+        System.out.println("You busted! Dealer wins."); /* Rito Murillo. if the players total past 21 this linhe print outs that player lost. */
+        losses++;
+        } else {
+        dealerTotal = dealerTurn(dealerTotal);
+        int result = determineWinner(playerTotal, dealerTotal);
+
+        if (result == 1) {
+         wins++;
+        } else if (result == -1) {
+        losses++;
+        } else {
+        ties++;
+        }
         }
 
-        dealerTotal = dealerTurn(dealerTotal);
-        determineWinner(playerTotal, dealerTotal);
+        System.out.println("\n--- Scoreboard ---");
+        System.out.println("Wins: " + wins);
+        System.out.println("Losses: " + losses);
+        System.out.println("Ties: " + ties);
 
+        System.out.print("\nPlay another round? (yes/no): ");
+        playAgain = scanner.nextLine().toLowerCase();
+
+        } while (playAgain.equals("yes"));
+
+        System.out.println("Thanks for playing!");
         scanner.close();
     }
 
@@ -112,16 +134,20 @@ public class BlackJack {
         System.out.println("Dealer's total is " + dealerTotal); 
         return dealerTotal; // if the dealer total is less than 17 deal a new card than that equal to a new total  - Trinitiy H.
     }
+    
     // This determines the winner - Jameela A
-    private static void determineWinner(int playerTotal, int dealerTotal) {
+    private static int determineWinner(int playerTotal, int dealerTotal) {
         if (dealerTotal > 21 || playerTotal > dealerTotal) {  // If the dealer loses, it print "you win" - Trinity H
             System.out.println("You win!"); 
+            return 1;
         } else if (dealerTotal == playerTotal) { // If dealer and player have the same amount, it prints "its a tie!" - Rito M.
             System.out.println("It's a tie!");
+            return 0;
         } else {
             System.out.println("Dealer wins!"); // Player loses - Jameela A
-        }
-    }
+            return -1;
+        } 
+    } 
 
 
     private static int dealCard() {
